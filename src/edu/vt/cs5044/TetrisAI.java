@@ -59,7 +59,6 @@ public class TetrisAI implements AI {
 			for (int row = Board.HEIGHT-1; row >= 0 ; row--) {
 				if (!fixedboard[col][row]) {
 					height -= 1;
-					break;
 				}
 			}
 			if(maxi<height) maxi=height; 
