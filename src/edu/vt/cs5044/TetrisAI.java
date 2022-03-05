@@ -42,20 +42,8 @@ public class TetrisAI implements AI {
 
 	@Override
 	public int getAverageColumnHeight(Board board) {
-		// TODO Auto-generated method stub
-		boolean[][] boolBoard = board.getFixedBlocks();
-		
 		int[] heights = this.getHeights(board);
-		for (int col=0;col<Board.WIDTH;col++)
-		{
-			heights[col] = Board.HEIGHT;
-			for (int row=Board.HEIGHT-1;row>=0;row--)
-			{
-				if(boolBoard[col][row])
-					break;
-				heights[col] -= 1;
-			}
-		}
+		
 		int total = 0;
 		for (int col=0;col<Board.WIDTH;col++)
 		{
@@ -66,28 +54,14 @@ public class TetrisAI implements AI {
 
 	@Override
 	public int getColumnHeightRange(Board board) {
-		// TODO Auto-generated method stub
-		boolean[][] fixedboard = board.getFixedBlocks();
-		int maxi;
-		int mini;
-		int height = 0;
-		for(int row=Board.HEIGHT-1;row>=0;row--) {
-			if(fixedboard[0][row])
-			{
-				height = row+1;
-			}
-		}
-		maxi = height;
-		mini = height;
+		int[] heights = this.getHeights(board);
+		int maxi = heights[0];
+		int mini = heights[0];
 		for (int col = 1; col < Board.WIDTH; col++) {
-			height = Board.HEIGHT;
-			for (int row = Board.HEIGHT-1; row >= 0 ; row--) {
-				if (!fixedboard[col][row]) {
-					height -= 1;
-				}
-			}
-			if(maxi<height) maxi=height; 
-			if(mini>height) mini=height;
+			if (heights[col]>maxi)
+				maxi=heights[col];
+			if (heights[col]<mini)
+				mini=heights[col];
 		}
 		
 		return (maxi-mini);
@@ -108,20 +82,17 @@ public class TetrisAI implements AI {
 
 	@Override
 	public int getTotalGapCount(Board board) {
-		// TODO Auto-generated method stub
-		boolean[][] fixedboard = board.getFixedBlocks();
+		int[] heights = this.getHeights(board);
+		boolean[][] boolBoard = board.getFixedBlocks();
+		
 		int gapcount=0;
-		for (int col = 0; col < Board.WIDTH; col++) {
-			boolean flag = false;
-			for (int row = Board.HEIGHT-1; row >= 0 ; row--) {
-				if (fixedboard[col][row]) {
-					flag=true;
-				}else if(flag)
-				{
+		
+		for (int col = 0; col < Board.WIDTH; col++) 
+		{
+			for(int row = heights[col]-1;row>=0;row--)
+			{
+				if (!boolBoard[col][row])
 					gapcount += 1;
-				}
-				
-				
 			}
 		}
 		
