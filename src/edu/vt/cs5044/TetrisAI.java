@@ -7,6 +7,30 @@ import edu.vt.cs5044.tetris.Rotation;
 import edu.vt.cs5044.tetris.Shape;
 
 public class TetrisAI implements AI {
+	
+	private int[] BoardHeights=null;
+	
+	private int[] getHeights(Board board)
+	{
+		if (this.BoardHeights!=null)
+		{
+			return this.BoardHeights;
+		}
+		boolean[][] boolBoard = board.getFixedBlocks();
+		int[] heights = new int[Board.WIDTH];
+		for (int col=0;col<Board.WIDTH;col++)
+		{
+			heights[col] = Board.HEIGHT;
+			for (int row=Board.HEIGHT-1;row>=0;row--)
+			{
+				if(boolBoard[col][row])
+					break;
+				heights[col] -= 1;
+			}
+		}
+		this.BoardHeights = heights;
+		return heights;
+	}
 
 	@Override
 	public Placement findBestPlacement(Board currentBoard, Shape shape) {
@@ -20,7 +44,8 @@ public class TetrisAI implements AI {
 	public int getAverageColumnHeight(Board board) {
 		// TODO Auto-generated method stub
 		boolean[][] boolBoard = board.getFixedBlocks();
-		int[] heights = new int[Board.WIDTH];
+		
+		int[] heights = this.getHeights(board);
 		for (int col=0;col<Board.WIDTH;col++)
 		{
 			heights[col] = Board.HEIGHT;
@@ -71,7 +96,14 @@ public class TetrisAI implements AI {
 	@Override
 	public int getColumnHeightVariance(Board board) {
 		// TODO Auto-generated method stub
-		return 0;
+		int[] heights = this.getHeights(board);
+		int abssum = 0;
+		for (int col =1;col<board.WIDTH;col++)
+		{
+			abssum += Math.abs(heights[col]-heights[col-1]);
+			System.out.print(abssum);
+		}
+		return abssum;
 	}
 
 	@Override

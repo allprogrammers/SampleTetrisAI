@@ -102,5 +102,34 @@ public class TetrisAITest {
 		TetrisAI tai = new TetrisAI();
 		assertEquals(2,tai.getColumnHeightRange(board));
 	}
+	
+	@Test
+	public void testHeightVariance() {
+		Board board = new Board(
+				"## ##    #",
+				"# ##### ##",
+				"#### #####");
+		TetrisAI tai = new TetrisAI();
+		assertEquals(6,tai.getColumnHeightVariance(board));
+	}
 
+	@Test
+	public void testHeightVariance2() {
+		Board board = new Board(
+				"##########",
+				"##########",
+				"##########");
+		TetrisAI tai = new TetrisAI();
+		assertEquals(0,tai.getColumnHeightVariance(board));
+	}
+	
+	@Test
+	public void testHeightVariance3() {
+		Board board = new Board(
+				"#     #   ",
+				"##   ###  ",
+				"### ##### ");
+		TetrisAI tai = new TetrisAI();
+		assertEquals(9,tai.getColumnHeightVariance(board));
+	}
 }
