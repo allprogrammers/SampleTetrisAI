@@ -29,6 +29,7 @@ public class TetrisAI implements AI {
 			}
 		}
 		this.BoardHeights = heights;
+		
 		return heights;
 	}
 
@@ -49,6 +50,7 @@ public class TetrisAI implements AI {
 		{
 			total += heights[col];
 		}
+		
 		return total/heights.length;
 	}
 
@@ -75,8 +77,8 @@ public class TetrisAI implements AI {
 		for (int col =1;col<board.WIDTH;col++)
 		{
 			abssum += Math.abs(heights[col]-heights[col-1]);
-			System.out.print(abssum);
 		}
+		
 		return abssum;
 	}
 
@@ -95,7 +97,6 @@ public class TetrisAI implements AI {
 					gapcount += 1;
 			}
 		}
-		
 		
 		return gapcount;
 	}
