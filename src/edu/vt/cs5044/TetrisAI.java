@@ -11,7 +11,7 @@ public class TetrisAI implements AI {
 	private int[] BoardHeights = null;
 	private Board lastBoard = null;
 	
-	private Boolean lastestBoardLoaded(Board board)
+	private Boolean islastestBoardLoaded(Board board)
 	{
 		if(this.lastBoard!=null && this.lastBoard==board)
 		{
@@ -23,7 +23,7 @@ public class TetrisAI implements AI {
 	
 	private int[] getHeights(Board board)
 	{
-		if(this.lastestBoardLoaded(board))
+		if(this.islastestBoardLoaded(board))
 		{
 			return this.BoardHeights;
 		}
@@ -49,7 +49,7 @@ public class TetrisAI implements AI {
 	
 	private int getTotalCost(Board Board)
 	{
-		int[] weights = {1,1,1,1};
+		int[] weights = {4,0,8,12};
 		int[] costs = {
 				this.getAverageColumnHeight(Board),
 				this.getColumnHeightRange(Board),
