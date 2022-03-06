@@ -8,15 +8,28 @@ import edu.vt.cs5044.tetris.Shape;
 
 public class TetrisAI implements AI {
 	
-	private int[] BoardHeights=null;
+	private int[] BoardHeights = null;
+	private Board lastBoard = null;
+	
+	private Boolean lastestBoardLoaded(Board board)
+	{
+		if(this.lastBoard!=null && this.lastBoard==board)
+		{
+			if(this.BoardHeights != null)
+				return true;
+		}
+		return false;
+	}
 	
 	private int[] getHeights(Board board)
 	{
-		if (this.BoardHeights!=null)
+		if(this.lastestBoardLoaded(board))
 		{
 			return this.BoardHeights;
 		}
+		
 		boolean[][] boolBoard = board.getFixedBlocks();
+		
 		int[] heights = new int[Board.WIDTH];
 		for (int col=0;col<Board.WIDTH;col++)
 		{
@@ -28,17 +41,53 @@ public class TetrisAI implements AI {
 				heights[col] -= 1;
 			}
 		}
+		
 		this.BoardHeights = heights;
 		
 		return heights;
 	}
+	
+	private int getTotalCost(Board Board)
+	{
+		int[] weights = {1,1,1,1};
+		int[] costs = {
+				this.getAverageColumnHeight(Board),
+				this.getColumnHeightRange(Board),
+				this.getColumnHeightVariance(Board),
+				this.getTotalGapCount(Board)
+				};
+		
+		int ans = 0;
+		for(int i=0;i<weights.length;i++)
+		{
+			ans += weights[i]*costs[i];
+		}
+
+		return ans;
+	}
 
 	@Override
 	public Placement findBestPlacement(Board currentBoard, Shape shape) {
-		// TODO Auto-generated method stub
-		//return null;
-		//System.out.println(getAverageColumnHeight(currentBoard));
-		return new Placement(Rotation.NONE,0);
+		
+		Placement minPlacement = null;
+		int minCost = Integer.MAX_VALUE;
+		
+		for(Rotation rot: shape.getValidRotationSet())
+		{
+			for(int col=0; col+shape.getWidth(rot) <= Board.WIDTH; col++)
+			{
+				Placement currentPlacement = new Placement(rot,col);
+				Board nextBoard = currentBoard.getResultBoard(shape, currentPlacement);
+				int currentCost = this.getTotalCost(nextBoard);
+				
+				if(currentCost<minCost)
+				{
+					minCost = currentCost;
+					minPlacement = currentPlacement;
+				}
+			}
+		}
+		return minPlacement;
 	}
 
 	@Override
@@ -57,13 +106,17 @@ public class TetrisAI implements AI {
 	@Override
 	public int getColumnHeightRange(Board board) {
 		int[] heights = this.getHeights(board);
+		
 		int maxi = heights[0];
 		int mini = heights[0];
-		for (int col = 1; col < Board.WIDTH; col++) {
+		for (int col = 1; col < Board.WIDTH; col++) 
+		{
+			
 			if (heights[col]>maxi)
 				maxi=heights[col];
 			if (heights[col]<mini)
 				mini=heights[col];
+			
 		}
 		
 		return (maxi-mini);
@@ -71,10 +124,11 @@ public class TetrisAI implements AI {
 
 	@Override
 	public int getColumnHeightVariance(Board board) {
-		// TODO Auto-generated method stub
+
 		int[] heights = this.getHeights(board);
+		
 		int abssum = 0;
-		for (int col =1;col<board.WIDTH;col++)
+		for (int col =1;col<Board.WIDTH;col++)
 		{
 			abssum += Math.abs(heights[col]-heights[col-1]);
 		}
