@@ -4,9 +4,24 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import edu.vt.cs5044.tetris.Board;
+import edu.vt.cs5044.tetris.*;
 
 public class TetrisAITest {
+	
+	@Test
+	public void sampleBestPlacement() {
+		Board board = new Board();
+		Shape shape = Shape.O;
+		
+		TetrisAI tai = new TetrisAI();
+		Placement placement = tai.findBestPlacement(board, shape);
+		assertEquals(true,true);
+		
+		board = board.getResultBoard(shape, placement);
+		
+		tai.findBestPlacement(board, shape);
+		assertEquals(true,true);
+	}
 
 	@Test
 	public void testAverageHeightB1() {

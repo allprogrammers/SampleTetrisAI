@@ -9,21 +9,10 @@ import edu.vt.cs5044.tetris.Shape;
 public class TetrisAI implements AI {
 	
 	private int[] BoardHeights = null;
-	private Board lastBoard = null;
-	
-	private Boolean islastestBoardLoaded(Board board)
-	{
-		if(this.lastBoard!=null && this.lastBoard==board)
-		{
-			if(this.BoardHeights != null)
-				return true;
-		}
-		return false;
-	}
 	
 	private int[] getHeights(Board board)
 	{
-		if(this.islastestBoardLoaded(board))
+		if(this.BoardHeights!=null)
 		{
 			return this.BoardHeights;
 		}
@@ -87,6 +76,8 @@ public class TetrisAI implements AI {
 				}
 			}
 		}
+		
+		this.BoardHeights = null;
 		return minPlacement;
 	}
 
