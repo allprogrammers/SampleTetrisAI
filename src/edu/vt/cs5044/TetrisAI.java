@@ -67,6 +67,7 @@ public class TetrisAI implements AI {
 			{
 				Placement currentPlacement = new Placement(rot,col);
 				Board nextBoard = currentBoard.getResultBoard(shape, currentPlacement);
+				this.BoardHeights = null;
 				int currentCost = this.getTotalCost(nextBoard);
 				
 				if(currentCost<minCost)
